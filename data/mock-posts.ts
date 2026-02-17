@@ -80,8 +80,8 @@ export const mockPosts: Post[] = [
     id: '5',
     type: 'game',
     label: 'MINI GAME MODE',
-    previewImageUrl: 'https://picsum.photos/seed/game/800/500',
-    loadingPercent: 89,
+    previewImage: require('@/assets/images/game/cover-art/alex-kidd.png'),
+    gameUrl: 'https://example.com/games/alex-kidd',
     author: adminAuthor,
     interactions: {
       likesCount: 542,
@@ -161,8 +161,8 @@ export const mockPosts: Post[] = [
     id: '10',
     type: 'game',
     label: 'QUIZ DA SEMANA',
-    previewImageUrl: 'https://picsum.photos/seed/quiz/800/500',
-    loadingPercent: 100,
+    previewImage: require('@/assets/images/game/cover-art/alex-kidd.png'),
+    gameUrl: 'https://example.com/games/quiz',
     author: adminAuthor,
     interactions: {
       likesCount: 789,

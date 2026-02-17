@@ -49,8 +49,8 @@ export interface VideoPost extends BasePost {
 export interface GamePost extends BasePost {
   type: 'game';
   label: string;
-  previewImageUrl: string;
-  loadingPercent: number;
+  previewImage: string | number;
+  gameUrl: string;
 }
 
 export interface SponsoredPost extends BasePost {

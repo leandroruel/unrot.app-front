@@ -30,11 +30,11 @@ export default function ExploreScreen() {
     .slice(0, 6)
     .map((p) => ({
       id: p.id,
-      imageUrl:
+      image:
         p.type === 'video'
           ? p.thumbnailUrl
           : p.type === 'game'
-            ? p.previewImageUrl
+            ? p.previewImage
             : `https://picsum.photos/seed/explore-${p.id}/400/400`,
     }));
 
@@ -94,7 +94,7 @@ export default function ExploreScreen() {
               onPress={() => router.push(`/post/${item.id}`)}
               style={styles.gridItem}>
               <Image
-                source={{ uri: item.imageUrl }}
+                source={typeof item.image === 'string' ? { uri: item.image } : item.image}
                 style={styles.gridImage}
                 contentFit="cover"
                 transition={200}
