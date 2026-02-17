@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "my-app",
-    "slug": "my-app",
+    "name": "zeha app",
+    "slug": "zeha-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "myapp",
+    "scheme": "zehaapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {

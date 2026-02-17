@@ -9,22 +9,46 @@ type IconMapping = Record<SymbolViewProps['name'], ComponentProps<typeof Materia
 type IconSymbolName = keyof typeof MAPPING;
 
 /**
- * Add your SF Symbols to Material Icons mappings here.
+ * SF Symbols to Material Icons mappings.
  * - see Material Icons in the [Icons Directory](https://icons.expo.fyi).
  * - see SF Symbols in the [SF Symbols](https://developer.apple.com/sf-symbols/) app.
  */
 const MAPPING = {
+  // Navigation
   'house.fill': 'home',
+  'magnifyingglass': 'search',
+  'plus.circle.fill': 'add-circle',
+  'bell.fill': 'notifications',
+  'person.circle.fill': 'account-circle',
+  'line.3.horizontal': 'menu',
+  'chevron.left': 'chevron-left',
+  'chevron.right': 'chevron-right',
+  'gearshape': 'settings',
+  'xmark': 'close',
+
+  // Interactions
+  'heart.fill': 'favorite',
+  'heart': 'favorite-border',
+  'bookmark.fill': 'bookmark',
+  'bookmark': 'bookmark-border',
+  'square.and.arrow.up': 'share',
+  'bubble.left': 'chat-bubble-outline',
+
+  // Content
+  'play.fill': 'play-arrow',
+  'speaker.wave.2': 'volume-up',
+  'speaker.slash': 'volume-off',
+  'arrow.left': 'arrow-back',
+  'arrow.right': 'arrow-forward',
+  'pencil': 'edit',
+  'photo.on.rectangle': 'photo-library',
+  'tag': 'label',
+
+  // Existing
   'paperplane.fill': 'send',
   'chevron.left.forwardslash.chevron.right': 'code',
-  'chevron.right': 'chevron-right',
 } as IconMapping;
 
-/**
- * An icon component that uses native SF Symbols on iOS, and Material Icons on Android and web.
- * This ensures a consistent look across platforms, and optimal resource usage.
- * Icon `name`s are based on SF Symbols and require manual mapping to Material Icons.
- */
 export function IconSymbol({
   name,
   size = 24,
