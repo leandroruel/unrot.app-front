@@ -48,7 +48,7 @@ export function usePosts(categorySlug?: string) {
     queryKey: ['posts', categorySlug],
     queryFn: async ({ pageParam }) => {
       const url = categorySlug
-        ? `/api/posts/category/${categorySlug}`
+        ? `/api/posts/category/${encodeURIComponent(categorySlug)}`
         : '/api/posts';
       const { data } = await api.get<SpringPage<ApiPost>>(url, {
         params: { page: pageParam, size: 10 },
