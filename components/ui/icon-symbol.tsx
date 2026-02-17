@@ -43,6 +43,8 @@ const MAPPING = {
   'pencil': 'edit',
   'photo.on.rectangle': 'photo-library',
   'tag': 'label',
+  'trash': 'delete',
+  'rectangle.portrait.and.arrow.right': 'logout',
 
   // Existing
   'paperplane.fill': 'send',

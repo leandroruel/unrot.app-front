@@ -1,5 +1,6 @@
 import { ArticleCard } from '@/components/cards/ArticleCard';
 import { GameCard } from '@/components/cards/GameCard';
+import { ImageCard } from '@/components/cards/ImageCard';
 import { QuoteCard } from '@/components/cards/QuoteCard';
 import { SponsoredCard } from '@/components/cards/SponsoredCard';
 import { VideoCard } from '@/components/cards/VideoCard';
@@ -25,6 +26,8 @@ export function PostCard({ post, onLike, onComment, onShare, onBookmark }: PostC
       return <VideoCard post={post} {...interactions} />;
     case 'game':
       return <GameCard post={post} {...interactions} />;
+    case 'image':
+      return <ImageCard post={post} {...interactions} />;
     case 'sponsored':
       return <SponsoredCard post={post} {...interactions} />;
   }

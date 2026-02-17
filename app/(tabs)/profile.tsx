@@ -8,19 +8,40 @@ import { ProfileHeader } from '@/components/profile/ProfileHeader';
 import { ProfileTabs, type ProfileTabKey } from '@/components/profile/ProfileTabs';
 import { IconSymbol } from '@/components/ui/icon-symbol';
 import { Colors, Spacing } from '@/constants/theme';
-import { mockUser } from '@/data/mock-user';
 import { useColorScheme } from '@/hooks/use-color-scheme';
-
-const mockGridItems = Array.from({ length: 6 }, (_, i) => ({
-  id: `grid-${i + 1}`,
-  thumbnailUrl: `https://picsum.photos/seed/profile-${i + 1}/400/400`,
-}));
+import { usePosts } from '@/hooks/use-posts';
+import { useAuthStore } from '@/stores/auth-store';
+import type { UserProfile } from '@/types';
 
 export default function ProfileScreen() {
   const colorScheme = useColorScheme();
   const colors = Colors[colorScheme ?? 'light'];
   const insets = useSafeAreaInsets();
   const [activeTab, setActiveTab] = useState<ProfileTabKey>('posts');
+  const logout = useAuthStore((s) => s.logout);
+
+  // Simplified profile — API doesn't have a /me endpoint yet
+  const user: UserProfile = {
+    id: '1',
+    name: 'Usuário',
+    username: 'usuario',
+    avatarUrl: 'https://ui-avatars.com/api/?name=User&background=random',
+    bio: '',
+    postsCount: 0,
+    followersCount: 0,
+    followingCount: 0,
+  };
+
+  const { posts } = usePosts();
+  const gridItems = posts.slice(0, 9).map((p) => ({
+    id: p.id,
+    thumbnailUrl:
+      p.type === 'video'
+        ? p.thumbnailUrl
+        : p.type === 'game' && typeof p.previewImage === 'string'
+          ? p.previewImage
+          : `https://picsum.photos/seed/profile-${p.id}/400/400`,
+  }));
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
@@ -31,15 +52,15 @@ export default function ProfileScreen() {
             <IconSymbol name="chevron.left" size={24} color={colors.text} />
           </Pressable>
           <ThemedText style={styles.headerTitle}>Profile</ThemedText>
-          <Pressable hitSlop={8}>
-            <IconSymbol name="gearshape" size={22} color={colors.text} />
+          <Pressable hitSlop={8} onPress={logout}>
+            <IconSymbol name="rectangle.portrait.and.arrow.right" size={22} color={colors.text} />
           </Pressable>
         </View>
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={{ paddingTop: Spacing.lg }}>
-          <ProfileHeader user={mockUser} />
+          <ProfileHeader user={user} />
         </View>
 
         <View style={{ marginTop: Spacing.md }}>
@@ -47,7 +68,7 @@ export default function ProfileScreen() {
         </View>
 
         <View style={{ marginTop: 2 }}>
-          <PostGrid items={mockGridItems} />
+          <PostGrid items={gridItems} />
         </View>
       </ScrollView>
     </View>
