@@ -1,6 +1,7 @@
 import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { api } from '@/lib/api';
+import { useAuthStore } from '@/stores/auth-store';
 import type { ApiComment, SpringPage } from '@/types/api';
 
 interface CommentPage {
@@ -9,6 +10,8 @@ interface CommentPage {
 }
 
 export function useComments(postId: string) {
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+
   const query = useInfiniteQuery<CommentPage>({
     queryKey: ['comments', postId],
     queryFn: async ({ pageParam }) => {
@@ -23,6 +26,7 @@ export function useComments(postId: string) {
     },
     initialPageParam: 0,
     getNextPageParam: (lastPage) => lastPage.nextPage,
+    enabled: !!postId && isAuthenticated,
   });
 
   const comments = query.data?.pages.flatMap((p) => p.comments) ?? [];

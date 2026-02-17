@@ -2,6 +2,7 @@ import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tansta
 
 import { api } from '@/lib/api';
 import { enrichPostWithInteractions, mapApiPostToPost } from '@/lib/mappers';
+import { useAuthStore } from '@/stores/auth-store';
 import { useInteractionStore } from '@/stores/interaction-store';
 import type { ApiPost, SpringPage } from '@/types/api';
 import type { Post } from '@/types/post';
@@ -22,6 +23,8 @@ function useEnrichedPosts(posts: Post[]): Post[] {
 }
 
 export function useFeed() {
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+
   const query = useInfiniteQuery<FeedPage>({
     queryKey: ['feed'],
     queryFn: async ({ pageParam }) => {
@@ -35,6 +38,7 @@ export function useFeed() {
     },
     initialPageParam: 0,
     getNextPageParam: (lastPage) => lastPage.nextPage,
+    enabled: isAuthenticated,
   });
 
   const allPosts = query.data?.pages.flatMap((p) => p.posts) ?? [];
@@ -44,6 +48,8 @@ export function useFeed() {
 }
 
 export function usePosts(categorySlug?: string) {
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+
   const query = useInfiniteQuery<FeedPage>({
     queryKey: ['posts', categorySlug],
     queryFn: async ({ pageParam }) => {
@@ -60,6 +66,7 @@ export function usePosts(categorySlug?: string) {
     },
     initialPageParam: 0,
     getNextPageParam: (lastPage) => lastPage.nextPage,
+    enabled: isAuthenticated,
   });
 
   const allPosts = query.data?.pages.flatMap((p) => p.posts) ?? [];
@@ -69,6 +76,7 @@ export function usePosts(categorySlug?: string) {
 }
 
 export function usePost(id: string) {
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const likedPostIds = useInteractionStore((s) => s.likedPostIds);
   const bookmarkedPostIds = useInteractionStore((s) => s.bookmarkedPostIds);
 
@@ -84,6 +92,7 @@ export function usePost(id: string) {
         new Set(likedPostIds),
         new Set(bookmarkedPostIds)
       ),
+    enabled: !!id && isAuthenticated,
   });
 }
 
