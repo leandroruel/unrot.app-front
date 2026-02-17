@@ -46,6 +46,7 @@ export default function RegisterScreen() {
         email: email.trim(),
         password,
       });
+      router.replace('/(tabs)');
     } catch (err: any) {
       setError(err.response?.data?.message ?? 'Erro ao criar conta');
     } finally {

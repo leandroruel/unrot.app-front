@@ -1,5 +1,5 @@
 import type { ApiPost } from '@/types/api';
-import type { ArticlePost, GamePost, Post, QuotePost, VideoPost } from '@/types/post';
+import type { ArticlePost, GamePost, ImagePost, Post, QuotePost, VideoPost } from '@/types/post';
 
 function getMediaUrl(apiPost: ApiPost): string | null {
   if (apiPost.media.length > 0) {
@@ -52,11 +52,10 @@ export function mapApiPostToPost(apiPost: ApiPost): Post {
     case 'IMAGE':
       return {
         ...baseFields,
-        type: 'game',
-        label: categoryName,
-        previewImage: mediaUrl ?? `https://picsum.photos/seed/g-${apiPost.id.slice(0, 8)}/800/450`,
-        gameUrl: '',
-      } satisfies GamePost;
+        type: 'image',
+        imageUrl: mediaUrl ?? `https://picsum.photos/seed/img-${apiPost.id.slice(0, 8)}/800/600`,
+        caption: apiPost.content,
+      } satisfies ImagePost;
 
     case 'ARTICLE':
     case 'LINK':

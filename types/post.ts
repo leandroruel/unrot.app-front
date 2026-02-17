@@ -1,4 +1,4 @@
-export type PostType = 'quote' | 'article' | 'video' | 'game' | 'sponsored';
+export type PostType = 'quote' | 'article' | 'video' | 'game' | 'image' | 'sponsored';
 
 export interface PostAuthor {
   id: string;
@@ -53,6 +53,12 @@ export interface GamePost extends BasePost {
   gameUrl: string;
 }
 
+export interface ImagePost extends BasePost {
+  type: 'image';
+  imageUrl: string;
+  caption: string;
+}
+
 export interface SponsoredPost extends BasePost {
   type: 'sponsored';
   iconUrl: string;
@@ -62,4 +68,4 @@ export interface SponsoredPost extends BasePost {
   actionUrl: string;
 }
 
-export type Post = QuotePost | ArticlePost | VideoPost | GamePost | SponsoredPost;
+export type Post = QuotePost | ArticlePost | VideoPost | GamePost | ImagePost | SponsoredPost;

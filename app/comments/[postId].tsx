@@ -17,6 +17,7 @@ import { IconSymbol } from '@/components/ui/icon-symbol';
 import { Colors, Spacing } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { useAddComment, useComments, useDeleteComment } from '@/hooks/use-comments';
+import { useAuthStore } from '@/stores/auth-store';
 import type { ApiComment } from '@/types/api';
 
 export default function CommentsScreen() {
@@ -24,6 +25,7 @@ export default function CommentsScreen() {
   const colorScheme = useColorScheme();
   const colors = Colors[colorScheme ?? 'light'];
   const [text, setText] = useState('');
+  const currentUserId = useAuthStore((s) => s.userId);
 
   const { comments, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useComments(postId);
@@ -32,8 +34,7 @@ export default function CommentsScreen() {
 
   const handleSend = () => {
     if (!text.trim()) return;
-    addComment.mutate(text.trim());
-    setText('');
+    addComment.mutate(text.trim(), { onSuccess: () => setText('') });
   };
 
   const renderItem = useCallback(
@@ -60,15 +61,17 @@ export default function CommentsScreen() {
             {item.content}
           </ThemedText>
         </View>
-        <Pressable
-          onPress={() => deleteComment.mutate(item.id)}
-          hitSlop={8}
-          style={styles.deleteBtn}>
-          <IconSymbol name="trash" size={14} color={colors.textSecondary} />
-        </Pressable>
+        {item.userId === currentUserId && (
+          <Pressable
+            onPress={() => deleteComment.mutate(item.id)}
+            hitSlop={8}
+            style={styles.deleteBtn}>
+            <IconSymbol name="trash" size={14} color={colors.textSecondary} />
+          </Pressable>
+        )}
       </View>
     ),
-    [colors, deleteComment]
+    [colors, currentUserId, deleteComment]
   );
 
   return (

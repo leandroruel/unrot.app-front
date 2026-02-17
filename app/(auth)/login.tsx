@@ -37,6 +37,7 @@ export default function LoginScreen() {
     setLoading(true);
     try {
       await login({ email: email.trim(), password });
+      router.replace('/(tabs)');
     } catch (err: any) {
       setError(err.response?.data?.message ?? 'Email ou senha incorretos');
     } finally {

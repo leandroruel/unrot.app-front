@@ -92,55 +92,57 @@ export function useToggleLike() {
   const toggleLike = useInteractionStore((s) => s.toggleLike);
   const isLiked = useInteractionStore((s) => s.isLiked);
 
-  return useMutation({
-    mutationFn: async (postId: string) => {
-      const liked = isLiked(postId);
-      if (liked) {
+  const mutation = useMutation({
+    // Variables carry wasLiked captured before the optimistic toggle
+    mutationFn: async ({ postId, wasLiked }: { postId: string; wasLiked: boolean }) => {
+      if (wasLiked) {
         await api.delete(`/api/posts/${postId}/likes`);
       } else {
         await api.post(`/api/posts/${postId}/likes`);
       }
-      return { postId, wasLiked: liked };
     },
-    onMutate: async (postId) => {
+    onMutate: async ({ postId }) => {
       toggleLike(postId);
-      return { postId };
     },
-    onError: (_err, _vars, context) => {
-      if (context?.postId) {
-        toggleLike(context.postId);
-      }
+    onError: (_err, { postId }) => {
+      toggleLike(postId); // rollback
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['feed'] });
       queryClient.invalidateQueries({ queryKey: ['posts'] });
     },
   });
+
+  return {
+    ...mutation,
+    mutate: (postId: string) => mutation.mutate({ postId, wasLiked: isLiked(postId) }),
+  };
 }
 
 export function useToggleBookmark() {
   const toggleBookmark = useInteractionStore((s) => s.toggleBookmark);
   const isBookmarked = useInteractionStore((s) => s.isBookmarked);
 
-  return useMutation({
-    mutationFn: async (postId: string) => {
-      const bookmarked = isBookmarked(postId);
-      if (bookmarked) {
+  const mutation = useMutation({
+    mutationFn: async ({ postId, wasBookmarked }: { postId: string; wasBookmarked: boolean }) => {
+      if (wasBookmarked) {
         await api.delete(`/api/posts/${postId}/bookmarks`);
       } else {
         await api.post(`/api/posts/${postId}/bookmarks`);
       }
     },
-    onMutate: async (postId) => {
+    onMutate: async ({ postId }) => {
       toggleBookmark(postId);
-      return { postId };
     },
-    onError: (_err, _vars, context) => {
-      if (context?.postId) {
-        toggleBookmark(context.postId);
-      }
+    onError: (_err, { postId }) => {
+      toggleBookmark(postId); // rollback
     },
   });
+
+  return {
+    ...mutation,
+    mutate: (postId: string) => mutation.mutate({ postId, wasBookmarked: isBookmarked(postId) }),
+  };
 }
 
 export function useSharePost() {

@@ -42,10 +42,29 @@ export default function PostDetailScreen() {
       ? post.thumbnailUrl
       : post.type === 'game'
         ? post.previewImage
-        : null;
+        : post.type === 'image'
+          ? post.imageUrl
+          : null;
 
-  const title = post.type === 'article' ? post.title : post.type === 'game' ? post.label : null;
-  const body = post.type === 'article' ? post.body : post.type === 'quote' ? post.body : null;
+  const title =
+    post.type === 'article'
+      ? post.title
+      : post.type === 'game'
+        ? post.label
+        : post.type === 'sponsored'
+          ? post.title
+          : null;
+
+  const body =
+    post.type === 'article'
+      ? post.body
+      : post.type === 'quote'
+        ? post.body
+        : post.type === 'image'
+          ? post.caption
+          : post.type === 'sponsored'
+            ? post.description
+            : null;
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
@@ -106,6 +125,7 @@ export default function PostDetailScreen() {
         <InteractionsBar
           interactions={post.interactions}
           onLike={() => likeMutation.mutate(post.id)}
+          onComment={() => router.push(`/comments/${post.id}`)}
           onBookmark={() => bookmarkMutation.mutate(post.id)}
           onShare={() => shareMutation.mutate(post.id)}
         />

@@ -98,7 +98,9 @@ export default function ExploreScreen() {
                   ? item.thumbnailUrl
                   : item.type === 'game'
                     ? item.previewImage
-                    : `https://picsum.photos/seed/explore-${item.id}/400/400`;
+                    : item.type === 'image'
+                      ? item.imageUrl
+                      : `https://picsum.photos/seed/explore-${item.id}/400/400`;
               return (
                 <Pressable
                   key={item.id}

@@ -6,6 +6,7 @@ export type {
   ArticlePost,
   VideoPost,
   GamePost,
+  ImagePost,
   SponsoredPost,
   Post,
 } from './post';
