@@ -1,42 +1,30 @@
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
-import { Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
+import { useState } from 'react';
+import { ActivityIndicator, Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/themed-text';
 import { IconSymbol } from '@/components/ui/icon-symbol';
 import { Colors, Spacing } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
-import { useFeedStore } from '@/stores/feed-store';
-
-const categories = [
-  'All',
-  'Articles',
-  'Quotes',
-  'Videos',
-  'Games',
-] as const;
+import { useCategories } from '@/hooks/use-categories';
+import { usePosts } from '@/hooks/use-posts';
 
 export default function ExploreScreen() {
   const colorScheme = useColorScheme();
   const colors = Colors[colorScheme ?? 'light'];
   const insets = useSafeAreaInsets();
-  const posts = useFeedStore((s) => s.posts);
   const router = useRouter();
+  const [selectedSlug, setSelectedSlug] = useState<string | undefined>(undefined);
 
-  // Simple trending grid from existing posts
-  const trendingItems = posts
-    .filter((p) => p.type !== 'sponsored')
-    .slice(0, 6)
-    .map((p) => ({
-      id: p.id,
-      image:
-        p.type === 'video'
-          ? p.thumbnailUrl
-          : p.type === 'game'
-            ? p.previewImage
-            : `https://picsum.photos/seed/explore-${p.id}/400/400`,
-    }));
+  const { data: categories } = useCategories();
+  const { posts, isLoading } = usePosts(selectedSlug);
+
+  const categoryList = [
+    { id: 0, name: 'All', slug: undefined as string | undefined },
+    ...(categories?.map((c) => ({ ...c, slug: c.slug as string | undefined })) ?? []),
+  ];
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
@@ -64,44 +52,69 @@ export default function ExploreScreen() {
           horizontal
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.categories}>
-          {categories.map((cat, i) => (
-            <Pressable
-              key={cat}
-              style={[
-                styles.categoryChip,
-                {
-                  backgroundColor: i === 0 ? colors.accent : colors.card,
-                  borderColor: colors.border,
-                },
-              ]}>
-              <ThemedText
+          {categoryList.map((cat) => {
+            const isActive = cat.slug === selectedSlug;
+            return (
+              <Pressable
+                key={cat.id}
+                onPress={() => setSelectedSlug(cat.slug)}
                 style={[
-                  styles.categoryText,
-                  { color: i === 0 ? '#fff' : colors.text },
+                  styles.categoryChip,
+                  {
+                    backgroundColor: isActive ? colors.accent : colors.card,
+                    borderColor: colors.border,
+                  },
                 ]}>
-                {cat}
-              </ThemedText>
-            </Pressable>
-          ))}
+                <ThemedText
+                  style={[
+                    styles.categoryText,
+                    { color: isActive ? '#fff' : colors.text },
+                  ]}>
+                  {cat.name}
+                </ThemedText>
+              </Pressable>
+            );
+          })}
         </ScrollView>
 
-        {/* Trending grid */}
-        <ThemedText style={styles.sectionTitle}>Trending</ThemedText>
-        <View style={styles.grid}>
-          {trendingItems.map((item) => (
-            <Pressable
-              key={item.id}
-              onPress={() => router.push(`/post/${item.id}`)}
-              style={styles.gridItem}>
-              <Image
-                source={typeof item.image === 'string' ? { uri: item.image } : item.image}
-                style={styles.gridImage}
-                contentFit="cover"
-                transition={200}
-              />
-            </Pressable>
-          ))}
-        </View>
+        {/* Posts grid */}
+        <ThemedText style={styles.sectionTitle}>
+          {selectedSlug ? categoryList.find((c) => c.slug === selectedSlug)?.name : 'Trending'}
+        </ThemedText>
+
+        {isLoading ? (
+          <ActivityIndicator size="large" color={colors.accent} style={{ marginTop: 40 }} />
+        ) : posts.length === 0 ? (
+          <View style={styles.empty}>
+            <ThemedText style={{ color: colors.textSecondary, fontSize: 15 }}>
+              Nenhum post encontrado
+            </ThemedText>
+          </View>
+        ) : (
+          <View style={styles.grid}>
+            {posts.slice(0, 12).map((item) => {
+              const imageUrl =
+                item.type === 'video'
+                  ? item.thumbnailUrl
+                  : item.type === 'game'
+                    ? item.previewImage
+                    : `https://picsum.photos/seed/explore-${item.id}/400/400`;
+              return (
+                <Pressable
+                  key={item.id}
+                  onPress={() => router.push(`/post/${item.id}`)}
+                  style={styles.gridItem}>
+                  <Image
+                    source={typeof imageUrl === 'string' ? { uri: imageUrl } : imageUrl}
+                    style={styles.gridImage}
+                    contentFit="cover"
+                    transition={200}
+                  />
+                </Pressable>
+              );
+            })}
+          </View>
+        )}
       </ScrollView>
     </View>
   );
@@ -178,5 +191,9 @@ const styles = StyleSheet.create({
   gridImage: {
     width: '100%',
     height: '100%',
+  },
+  empty: {
+    alignItems: 'center',
+    paddingTop: 40,
   },
 });

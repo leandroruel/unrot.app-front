@@ -1,18 +1,17 @@
 import { create } from 'zustand';
 
-import { mockNotifications, mockUser } from '@/data/mock-user';
-import type { Notification, UserProfile } from '@/types';
+import { mockNotifications } from '@/data/mock-user';
+import type { Notification } from '@/types';
 
+// TODO: Replace mock notifications with API data when endpoint is available
 interface UserState {
-  currentUser: UserProfile;
   notifications: Notification[];
   unreadCount: number;
   markAsRead: (notificationId: string) => void;
   markAllAsRead: () => void;
 }
 
-export const useUserStore = create<UserState>((set, get) => ({
-  currentUser: mockUser,
+export const useUserStore = create<UserState>((set) => ({
   notifications: mockNotifications,
   unreadCount: mockNotifications.filter((n) => !n.isRead).length,
 

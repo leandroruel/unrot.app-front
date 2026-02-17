@@ -15,3 +15,14 @@ export type {
   NotificationType,
   Notification,
 } from './user';
+
+export type {
+  ApiCategory,
+  ApiMedia,
+  ApiPost,
+  ApiComment,
+  SpringPage,
+  AuthResponse,
+  LoginRequest,
+  RegisterRequest,
+} from './api';

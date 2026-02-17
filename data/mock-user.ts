@@ -1,16 +1,6 @@
-import type { UserProfile, Notification } from '@/types';
+import type { Notification } from '@/types';
 
-export const mockUser: UserProfile = {
-  id: 'user-1',
-  name: 'Alex Harrison',
-  username: 'alexharrison',
-  avatarUrl: 'https://i.pravatar.cc/300?u=alex-harrison',
-  bio: 'Digital Artist & UI/UX Designer exploring the intersection of tactile design and technology. Based in SF 🌉',
-  postsCount: 1200,
-  followersCount: 45000,
-  followingCount: 320,
-};
-
+// TODO: Replace with API notifications endpoint when available
 export const mockNotifications: Notification[] = [
   {
     id: 'n1',
