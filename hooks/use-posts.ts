@@ -120,6 +120,7 @@ export function useToggleLike() {
 }
 
 export function useToggleBookmark() {
+  const queryClient = useQueryClient();
   const toggleBookmark = useInteractionStore((s) => s.toggleBookmark);
   const isBookmarked = useInteractionStore((s) => s.isBookmarked);
 
@@ -136,6 +137,10 @@ export function useToggleBookmark() {
     },
     onError: (_err, { postId }) => {
       toggleBookmark(postId); // rollback
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['feed'] });
+      queryClient.invalidateQueries({ queryKey: ['posts'] });
     },
   });
 
