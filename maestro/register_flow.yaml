@@ -1,0 +1,44 @@
+appId: host.exp.exponent
+---
+# ── Register Flow ─────────────────────────────────────────────────────────────
+# Tests successful account creation with valid data.
+
+- waitForAnimationToEnd
+
+# App redirects unauthenticated users to Login — navigate to Register
+- assertVisible: "Entre na sua conta"
+- tapOn: "Criar conta"
+
+- waitForAnimationToEnd
+
+# Assert we are on the Register screen
+- assertVisible: "Crie sua conta"
+
+- takeScreenshot: "01_register_screen"
+
+# Fill name field (testID: input-name)
+- tapOn:
+    id: "input-name"
+- inputText: ${DISPLAY_NAME}
+
+# Fill email field (testID: input-email)
+- tapOn:
+    id: "input-email"
+- inputText: ${EMAIL}
+
+# Fill password field (testID: input-password)
+- tapOn:
+    id: "input-password"
+- inputText: ${PASSWORD}
+
+- takeScreenshot: "02_register_filled"
+
+# Submit
+- tapOn: "Criar Conta"
+
+- waitForAnimationToEnd
+
+# After successful registration we should land on the tabs screen
+- assertNotVisible: "Crie sua conta"
+
+- takeScreenshot: "03_register_success"

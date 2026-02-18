@@ -1,0 +1,31 @@
+appId: host.exp.exponent
+---
+# ── Login Validation Flow ─────────────────────────────────────────────────────
+# Tests error messages on the login screen.
+
+- launchApp
+- waitForAnimationToEnd
+- assertVisible: "Entre na sua conta"
+
+# ── Test 1: empty fields → "Preencha todos os campos" ─────────────────────────
+- tapOn: "Entrar"
+- assertVisible: "Preencha todos os campos"
+- takeScreenshot: "01_login_empty_error"
+
+# ── Test 2: wrong credentials → "Email ou senha incorretos" ───────────────────
+- launchApp
+- waitForAnimationToEnd
+
+# Type email, then tap password and immediately type — no intermediate steps
+- assertVisible: "Entre na sua conta"
+- tapOn:
+    id: "input-email"
+- assertVisible:
+    id: "input-email"
+- inputText: "wrong@email.com"
+- tapOn:
+    point: "50%,26%"
+- inputText: "wrongpassword"
+- tapOn: "Entrar"
+- assertVisible: "Email ou senha incorretos"
+- takeScreenshot: "02_login_wrong_credentials"

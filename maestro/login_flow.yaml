@@ -1,0 +1,33 @@
+appId: host.exp.exponent
+---
+# ── Login Flow ────────────────────────────────────────────────────────────────
+# Tests successful login with valid credentials.
+
+- waitForAnimationToEnd
+
+# Assert we are on the Login screen
+- assertVisible: "Entre na sua conta"
+
+- takeScreenshot: "01_login_screen"
+
+# Fill email field
+- tapOn:
+    id: "input-email"
+- inputText: ${EMAIL}
+
+# Fill password field
+- tapOn:
+    id: "input-password"
+- inputText: ${PASSWORD}
+
+- takeScreenshot: "02_login_filled"
+
+# Tap the login button
+- tapOn: "Entrar"
+
+- waitForAnimationToEnd
+
+# After successful login we should land on the tabs screen (not auth)
+- assertNotVisible: "Entre na sua conta"
+
+- takeScreenshot: "03_login_success"

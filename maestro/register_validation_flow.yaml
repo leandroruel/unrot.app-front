@@ -1,0 +1,29 @@
+appId: host.exp.exponent
+---
+# ── Register Validation Flow ──────────────────────────────────────────────────
+# Tests validation error messages on the register screen.
+
+- waitForAnimationToEnd
+- assertVisible: "Entre na sua conta"
+- tapOn: "Criar conta"
+- waitForAnimationToEnd
+- assertVisible: "Crie sua conta"
+
+# Test 1: empty fields → "Preencha todos os campos"
+- tapOn: "Criar Conta"
+- assertVisible: "Preencha todos os campos"
+- takeScreenshot: "01_register_empty_error"
+
+# Test 2: password too short → "A senha deve ter pelo menos 6 caracteres"
+- tapOn:
+    id: "input-name"
+- inputText: "Test User"
+- tapOn:
+    id: "input-email"
+- inputText: "test@email.com"
+- tapOn:
+    id: "input-password"
+- inputText: "123"
+- tapOn: "Criar Conta"
+- assertVisible: "A senha deve ter pelo menos 6 caracteres"
+- takeScreenshot: "02_register_short_password_error"
