@@ -49,7 +49,7 @@ export default function LoginScreen() {
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       style={[styles.container, { backgroundColor: colors.background }]}>
-      <View style={[styles.content, { paddingTop: insets.top + 60 }]}>
+      <View style={[styles.content, { paddingTop: insets.top }]}>
         <ThemedText style={[styles.brand, { color: colors.text }]}>zeha</ThemedText>
         <ThemedText style={[styles.subtitle, { color: colors.textSecondary }]}>
           Entre na sua conta
@@ -57,6 +57,7 @@ export default function LoginScreen() {
 
         <View style={styles.form}>
           <TextInput
+            testID="input-email"
             placeholder="Email"
             placeholderTextColor={colors.textSecondary}
             keyboardType="email-address"
@@ -71,6 +72,7 @@ export default function LoginScreen() {
           />
 
           <TextInput
+            testID="input-password"
             placeholder="Senha"
             placeholderTextColor={colors.textSecondary}
             secureTextEntry
@@ -116,9 +118,11 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: Spacing.xl,
     alignItems: 'center',
+    justifyContent: 'center',
   },
   brand: {
     fontSize: 42,
+    lineHeight: 56,
     fontWeight: '700',
     fontFamily: Platform.select({ ios: 'Georgia', android: 'serif' }),
     marginBottom: Spacing.xs,
